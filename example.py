@@ -1,5 +1,7 @@
 import config_gen as cgen
 
+cgen.set_name_separator("__")
+
 cfg = cgen.Single("hoge", {"a": 10, "b": {"c": 20, "d": 30}, "c": "hogehoge"})
 
 cfg = (
