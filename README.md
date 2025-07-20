@@ -46,37 +46,23 @@ foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
 
 ## Concepts
 
+### Building configuration sets
+
 - **Single** – wrap a single base configuration.
 - **Patch** – apply dictionary patches to each configuration in a set.
 - **Union** – combine multiple configuration sets into one.
+
+### Merge helpers
+
 - **Replace** – fully replace a sub-dictionary when merging.
 - **Remove** – remove a key entirely during merging.
+
+### Transformations
+
 - **map** – transform each `(name, config)` pair in a set.
 - **filter** – drop pairs that don't satisfy a predicate.
 
-```python
-import config_forge as cforge
-
-cfg = cforge.deep_merge({"a": 1, "b": 2}, {"a": cforge.Remove()})
-assert cfg == {"b": 2}
-```
-
 See `examples/example.py` for a full demonstration.
-
-## Mapping and filtering
-
-```python
-import config_forge as cforge
-
-cfgs = (
-    cforge.Single("b", {"x": 1})
-    .patch(p1={"x": 2}, p2={"x": 3})
-    .map(lambda n, c: (n.upper(), {"x": c["x"] * 2}))
-    .filter(lambda n, c: c["x"] > 4)
-)
-
-assert list(cfgs) == [("B__P2", {"x": 6})]
-```
 
 ## License
 
