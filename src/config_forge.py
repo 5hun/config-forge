@@ -7,7 +7,7 @@ track of the name describing each variation.
 
 Typical usage::
 
-    import config_gen as cgen
+    import config_forge as cgen
 
     base = cgen.Single("base", {"a": 1})
     cfgs = base.patch(x={"a": 2}) | base.patch(y={"a": 3})
@@ -54,7 +54,7 @@ def deep_merge(a, b):
     return copy.deepcopy(b)
 
 
-class ConfigSet:
+class ParamSet:
     """Base class representing an iterable collection of configurations."""
 
     @abstractmethod
@@ -63,7 +63,7 @@ class ConfigSet:
 
         raise NotImplementedError()
 
-    def __or__(self, other: "ConfigSet") -> "Union":
+    def __or__(self, other: "ParamSet") -> "Union":
         """Return a :class:`Union` of ``self`` and ``other``."""
 
         return Union(self, other)
@@ -74,7 +74,7 @@ class ConfigSet:
         return Patch(self, patches)
 
 
-class Single(ConfigSet):
+class Single(ParamSet):
     """A configuration set that yields a single (name, config) pair."""
 
     def __init__(self, name: str, cfg: dict):
@@ -89,7 +89,7 @@ class Single(ConfigSet):
         yield (self.name, self.cfg)
 
 
-class Union(ConfigSet):
+class Union(ParamSet):
     """A configuration set produced by combining multiple sets."""
 
     def __init__(self, *others):
@@ -104,10 +104,10 @@ class Union(ConfigSet):
             yield from cfg_set
 
 
-class Patch(ConfigSet):
+class Patch(ParamSet):
     """Apply one or more patches to each configuration in ``base``."""
 
-    def __init__(self, base: ConfigSet, patches: dict[str, dict]):
+    def __init__(self, base: ParamSet, patches: dict[str, dict]):
         """Create a patched configuration set."""
 
         self.base = base

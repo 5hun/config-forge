@@ -1,7 +1,26 @@
 [project]
-name = "config-gen"
-version = "0.1.0"
-description = "Add your description here"
+name = "config-forge"
+version = "0.1.0.dev1"
+description = "Utilities for generating dictionary based parameter sets"
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/5hun/config-forge"
+
+[dependency-groups]
+dev = ["pytest>=7.0", "pytest-cov>=6.2.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--cov=src --cov-report xml"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true

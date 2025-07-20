@@ -1,4 +1,4 @@
-# config_gen
+# config_forge
 
 A tiny library for generating sets of configuration dictionaries.  It lets you
 patch existing configurations and automatically assigns descriptive names to each
@@ -13,11 +13,11 @@ pip install config-gen
 ## Quick example
 
 ```python
-import config_gen as cgen
+import config_forge as cforge
 
-cgen.set_name_separator("__")
+cforge.set_name_separator("__")
 
-base = cgen.Single("hoge", {"a": 10, "b": {"c": 20, "d": 30}, "c": "hogehoge"})
+base = cforge.Single("hoge", {"a": 10, "b": {"c": 20, "d": 30}, "c": "hogehoge"})
 
 cfgs = (
     base.patch(**{f"b_c_{i}": {"b": {"c": i}} for i in range(3)})
