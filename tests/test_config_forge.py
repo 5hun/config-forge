@@ -47,3 +47,23 @@ def test_set_name_separator():
     patched = base.patch(p={"x": 2})
     assert list(patched) == [("b::p", {"x": 2})]
 
+
+def test_len_single():
+    cfg = cgen.Single("nm", {})
+    assert len(cfg) == 1
+
+
+def test_len_patch_and_union():
+    base = cgen.Single("b", {})
+    p1 = base.patch(p1={}, p2={})
+    p2 = base.patch(q1={})
+    union = p1 | p2
+    assert len(p1) == 2
+    assert len(union) == 3
+
+
+def test_len_patch_chain():
+    base = cgen.Single("b", {})
+    patched = base.patch(p1={}, p2={}).patch(q1={}, q2={})
+    assert len(patched) == 4
+

@@ -63,6 +63,11 @@ class ParamSet:
 
         raise NotImplementedError()
 
+    def __len__(self) -> int:
+        """Return the number of configurations contained in the set."""
+
+        return sum(1 for _ in self)
+
     def __or__(self, other: "ParamSet") -> "Union":
         """Return a :class:`Union` of ``self`` and ``other``."""
 
@@ -88,6 +93,11 @@ class Single(ParamSet):
 
         yield (self.name, self.cfg)
 
+    def __len__(self) -> int:
+        """Return the number of configurations in this set (always ``1``)."""
+
+        return 1
+
 
 class Union(ParamSet):
     """A configuration set produced by combining multiple sets."""
@@ -102,6 +112,11 @@ class Union(ParamSet):
 
         for cfg_set in self.others:
             yield from cfg_set
+
+    def __len__(self) -> int:
+        """Return the total number of configurations across all sets."""
+
+        return sum(len(cfg_set) for cfg_set in self.others)
 
 
 class Patch(ParamSet):
@@ -123,3 +138,8 @@ class Patch(ParamSet):
                 else:
                     new_name = f"{nm}{_name_separator}{p_name}"
                 yield new_name, deep_merge(cfg, d)
+
+    def __len__(self) -> int:
+        """Return the number of patched configurations."""
+
+        return len(self.base) * len(self.patches)
