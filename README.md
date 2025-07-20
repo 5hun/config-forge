@@ -36,6 +36,9 @@ The above script prints names composed from each patch along with the resulting 
 ```
 foo__b_c_0__c_x {'a': 10, 'b': {'c': 0, 'd': 30}, 'c': 'x'}
 foo__b_c_0__c_y {'a': 10, 'b': {'c': 0, 'd': 30}, 'c': 'y'}
+foo__b_c_0__c_z {'a': 10, 'b': {'c': 0, 'd': 30}, 'c': 'z'}
+foo__b_c_1__c_x {'a': 10, 'b': {'c': 1, 'd': 30}, 'c': 'x'}
+foo__b_c_1__c_y {'a': 10, 'b': {'c': 1, 'd': 30}, 'c': 'y'}
 ...
 foo__c_baz {'a': 10, 'b': {'c': 20, 'd': 30}, 'c': 'baz'}
 foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
