@@ -78,7 +78,7 @@ def deep_merge(a, b):
     return copy.deepcopy(b)
 
 
-class ParamSet:
+class ConfigSet:
     """Base class representing an iterable collection of configurations."""
 
     @abstractmethod
@@ -92,7 +92,7 @@ class ParamSet:
 
         return sum(1 for _ in self)
 
-    def __or__(self, other: "ParamSet") -> "Union":
+    def __or__(self, other: "ConfigSet") -> "Union":
         """Return a :class:`Union` of ``self`` and ``other``."""
 
         return Union(self, other)
@@ -113,7 +113,7 @@ class ParamSet:
         return Filtered(self, pred)
 
 
-class Single(ParamSet):
+class Single(ConfigSet):
     """A configuration set that yields a single (name, config) pair."""
 
     def __init__(self, name: str, cfg: dict):
@@ -133,7 +133,7 @@ class Single(ParamSet):
         return 1
 
 
-class Union(ParamSet):
+class Union(ConfigSet):
     """A configuration set produced by combining multiple sets."""
 
     def __init__(self, *others):
@@ -153,10 +153,10 @@ class Union(ParamSet):
         return sum(len(cfg_set) for cfg_set in self.others)
 
 
-class Patch(ParamSet):
+class Patch(ConfigSet):
     """Apply one or more patches to each configuration in ``base``."""
 
-    def __init__(self, base: ParamSet, patches: dict[str, dict]):
+    def __init__(self, base: ConfigSet, patches: dict[str, dict]):
         """Create a patched configuration set."""
 
         self.base = base
@@ -179,10 +179,10 @@ class Patch(ParamSet):
         return len(self.base) * len(self.patches)
 
 
-class Mapped(ParamSet):
+class Mapped(ConfigSet):
     """Configuration set produced by applying a transformation function."""
 
-    def __init__(self, base: ParamSet, func: Callable[[str, dict], tuple[str, dict]]):
+    def __init__(self, base: ConfigSet, func: Callable[[str, dict], tuple[str, dict]]):
         self.base = base
         self.func = func
 
@@ -194,10 +194,10 @@ class Mapped(ParamSet):
         return len(self.base)
 
 
-class Filtered(ParamSet):
+class Filtered(ConfigSet):
     """Configuration set containing only items that pass ``pred``."""
 
-    def __init__(self, base: ParamSet, pred: Callable[[str, dict], bool]):
+    def __init__(self, base: ConfigSet, pred: Callable[[str, dict], bool]):
         self.base = base
         self.pred = pred
 
