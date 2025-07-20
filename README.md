@@ -14,7 +14,7 @@ pip install config-forge
 import config_forge as cforge
 
 # optionally change the separator used for generated names
-cforge.set_name_separator("__")
+cforge.set_name_separator("__")  # or use `name_separator("__")` as a context manager
 
 base = cforge.Single("foo", {"a": 10, "b": {"c": 20, "d": 30}, "c": "qux"})
 
