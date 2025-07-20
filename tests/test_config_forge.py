@@ -93,3 +93,30 @@ def test_patch_remove():
     base = cgen.Single("b", {"a": 1, "b": 2})
     patched = base.patch(rm={"a": cgen.Remove()})
     assert list(patched) == [("b__rm", {"b": 2})]
+
+
+def test_map():
+    base = cgen.Single("b", {"x": 1})
+    patched = base.patch(p1={"x": 2}, p2={"x": 3})
+
+    def func(nm, cfg):
+        return nm.upper(), {"x": cfg["x"] * 2}
+
+    mapped = patched.map(func)
+    assert list(mapped) == [
+        ("B__P1", {"x": 4}),
+        ("B__P2", {"x": 6}),
+    ]
+    assert len(mapped) == 2
+
+
+def test_filter():
+    base = cgen.Single("b", {"x": 0})
+    patched = base.patch(**{f"v{i}": {"x": i} for i in range(3)})
+
+    filtered = patched.filter(lambda n, c: c["x"] % 2 == 0)
+    assert list(filtered) == [
+        ("b__v0", {"x": 0}),
+        ("b__v2", {"x": 2}),
+    ]
+    assert len(filtered) == 2

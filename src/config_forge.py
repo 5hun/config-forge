@@ -20,7 +20,7 @@ You can control the separator inserted between names during patching with
 
 from abc import abstractmethod
 import copy
-from typing import Iterable
+from typing import Iterable, Callable
 from dataclasses import dataclass
 from contextlib import contextmanager
 
@@ -102,6 +102,16 @@ class ParamSet:
 
         return Patch(self, patches)
 
+    def map(self, func: Callable[[str, dict], tuple[str, dict]]) -> "Mapped":
+        """Return a :class:`Mapped` view of this set transformed by ``func``."""
+
+        return Mapped(self, func)
+
+    def filter(self, pred: Callable[[str, dict], bool]) -> "Filtered":
+        """Return a :class:`Filtered` view containing only items where ``pred`` is ``True``."""
+
+        return Filtered(self, pred)
+
 
 class Single(ParamSet):
     """A configuration set that yields a single (name, config) pair."""
@@ -167,3 +177,34 @@ class Patch(ParamSet):
         """Return the number of patched configurations."""
 
         return len(self.base) * len(self.patches)
+
+
+class Mapped(ParamSet):
+    """Configuration set produced by applying a transformation function."""
+
+    def __init__(self, base: ParamSet, func: Callable[[str, dict], tuple[str, dict]]):
+        self.base = base
+        self.func = func
+
+    def __iter__(self) -> Iterable[tuple[str, dict]]:
+        for nm, cfg in self.base:
+            yield self.func(nm, cfg)
+
+    def __len__(self) -> int:
+        return len(self.base)
+
+
+class Filtered(ParamSet):
+    """Configuration set containing only items that pass ``pred``."""
+
+    def __init__(self, base: ParamSet, pred: Callable[[str, dict], bool]):
+        self.base = base
+        self.pred = pred
+
+    def __iter__(self) -> Iterable[tuple[str, dict]]:
+        for nm, cfg in self.base:
+            if self.pred(nm, cfg):
+                yield nm, cfg
+
+    def __len__(self) -> int:
+        return sum(1 for nm, cfg in self.base if self.pred(nm, cfg))
