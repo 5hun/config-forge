@@ -35,6 +35,13 @@ class Replace:
     data: dict
 
 
+@dataclass
+class Remove:
+    """Wrapper used to drop a key during :func:`deep_merge`."""
+
+    pass
+
+
 def set_name_separator(sep: str):
     """Change the separator used when generating new configuration names."""
 
@@ -61,7 +68,10 @@ def deep_merge(a, b):
     if isinstance(a, dict) and isinstance(b, dict):
         out = copy.deepcopy(a)
         for k, v in b.items():
-            out[k] = deep_merge(out.get(k), v)
+            if isinstance(v, Remove):
+                out.pop(k, None)
+            else:
+                out[k] = deep_merge(out.get(k), v)
         return out
     if isinstance(b, Replace):
         b = b.data

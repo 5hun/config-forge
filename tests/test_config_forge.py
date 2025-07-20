@@ -2,6 +2,7 @@ import pytest
 
 import config_forge as cgen
 
+
 @pytest.fixture(autouse=True)
 def reset_separator():
     yield
@@ -22,6 +23,13 @@ def test_deep_merge_replace():
     assert res == {"a": 1, "b": {"x": 5}}
 
 
+def test_deep_merge_remove():
+    a = {"a": 1, "b": {"c": 2, "d": 3}}
+    b = {"a": cgen.Remove(), "b": {"c": cgen.Remove()}}
+    res = cgen.deep_merge(a, b)
+    assert res == {"b": {"d": 3}}
+
+
 def test_patch_and_union():
     base = cgen.Single("base", {"a": 1})
     cfg = base.patch(first={"a": 2}) | base.patch(second={"a": 3})
@@ -36,9 +44,7 @@ def test_patch_chain():
     base = cgen.Single("base", {"a": 1})
     cfg = base.patch(p1={"a": 2}).patch(p2={"b": 3})
     result = list(cfg)
-    assert result == [
-        ("base__p1__p2", {"a": 2, "b": 3})
-    ]
+    assert result == [("base__p1__p2", {"a": 2, "b": 3})]
 
 
 def test_set_name_separator():
@@ -82,3 +88,8 @@ def test_len_patch_chain():
     patched = base.patch(p1={}, p2={}).patch(q1={}, q2={})
     assert len(patched) == 4
 
+
+def test_patch_remove():
+    base = cgen.Single("b", {"a": 1, "b": 2})
+    patched = base.patch(rm={"a": cgen.Remove()})
+    assert list(patched) == [("b__rm", {"b": 2})]

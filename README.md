@@ -50,6 +50,14 @@ foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
 - **Patch** – apply dictionary patches to each configuration in a set.
 - **Union** – combine multiple configuration sets into one.
 - **Replace** – fully replace a sub-dictionary when merging.
+- **Remove** – remove a key entirely during merging.
+
+```python
+import config_forge as cforge
+
+cfg = cforge.deep_merge({"a": 1, "b": 2}, {"a": cforge.Remove()})
+assert cfg == {"b": 2}
+```
 
 See `examples/example.py` for a full demonstration.
 
