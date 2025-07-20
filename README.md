@@ -51,7 +51,7 @@ foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
 - **Union** – combine multiple configuration sets into one.
 - **Replace** – fully replace a sub-dictionary when merging.
 
-See `example.py` for a full demonstration.
+See `examples/example.py` for a full demonstration.
 
 ## License
 
