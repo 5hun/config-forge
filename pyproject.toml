@@ -4,6 +4,15 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
+dependencies = []
+
+[dependency-groups]
+dev = [
     "pytest>=7.0",
+    "pytest-cov>=6.2.1",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--cov=src --cov-report xml"
