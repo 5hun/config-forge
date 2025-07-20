@@ -22,6 +22,7 @@ from abc import abstractmethod
 import copy
 from typing import Iterable
 from dataclasses import dataclass
+from contextlib import contextmanager
 
 
 _name_separator = "__"
@@ -39,6 +40,19 @@ def set_name_separator(sep: str):
 
     global _name_separator
     _name_separator = sep
+
+
+@contextmanager
+def name_separator(sep: str):
+    """Temporarily set the separator used for generating configuration names."""
+
+    global _name_separator
+    prev = _name_separator
+    _name_separator = sep
+    try:
+        yield
+    finally:
+        _name_separator = prev
 
 
 def deep_merge(a, b):

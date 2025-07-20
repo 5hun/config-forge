@@ -48,6 +48,21 @@ def test_set_name_separator():
     assert list(patched) == [("b::p", {"x": 2})]
 
 
+def test_name_separator_context():
+    base = cgen.Single("b", {"x": 1})
+    with cgen.name_separator("::"):
+        assert list(base.patch(p={})) == [("b::p", {"x": 1})]
+    assert list(base.patch(p={})) == [("b__p", {"x": 1})]
+
+
+def test_name_separator_context_restores_previous():
+    cgen.set_name_separator("++")
+    base = cgen.Single("b", {"x": 1})
+    with cgen.name_separator("::"):
+        assert list(base.patch(p={})) == [("b::p", {"x": 1})]
+    assert list(base.patch(p={})) == [("b++p", {"x": 1})]
+
+
 def test_len_single():
     cfg = cgen.Single("nm", {})
     assert len(cfg) == 1
