@@ -44,6 +44,8 @@ foo__c_baz {'a': 10, 'b': {'c': 20, 'd': 30}, 'c': 'baz'}
 foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
 ```
 
+See `examples/example.py` for a full demonstration.
+
 ## Concepts
 
 ### Building configuration sets
@@ -61,8 +63,6 @@ foo__aaa {'a': 10, 'b': {'x': 30}, 'c': 'qux'}
 
 - **map** – transform each `(name, config)` pair in a set.
 - **filter** – drop pairs that don't satisfy a predicate.
-
-See `examples/example.py` for a full demonstration.
 
 ## License
 
