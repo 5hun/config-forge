@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import pytest
 
-import config_gen as cgen
+import config_forge as cgen
 
 @pytest.fixture(autouse=True)
 def reset_separator():
